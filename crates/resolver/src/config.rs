@@ -734,7 +734,7 @@ impl Default for ResolverOpts {
             positive_max_ttl: None,
             negative_max_ttl: None,
             num_concurrent_reqs: 2,
-            preserve_intermediates: false,
+            preserve_intermediates: true,
         }
     }
 }
