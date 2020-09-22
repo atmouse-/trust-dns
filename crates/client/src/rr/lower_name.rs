@@ -159,6 +159,10 @@ impl LowerName {
         let name = self.0.into_wildcard();
         LowerName(name)
     }
+
+    pub fn get_name(self) -> Name {
+        self.0
+    }
 }
 
 impl Hash for LowerName {

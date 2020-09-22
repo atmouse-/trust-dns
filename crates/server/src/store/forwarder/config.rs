@@ -8,12 +8,24 @@
 use serde::Deserialize;
 
 use crate::resolver::config::{NameServerConfigGroup, ResolverOpts};
+use crate::resolver::config::{AclEntry, NameServerHookAclGroup};
+use std::collections::HashMap;
 
 /// Configuration for file based zones
 #[derive(Deserialize, PartialEq, Debug)]
 pub struct ForwardConfig {
     /// upstream name_server configurations
     pub name_servers: NameServerConfigGroup,
+    /// Resolver options
+    pub options: Option<ResolverOpts>,
+}
+
+#[derive(Deserialize, PartialEq, Debug)]
+pub struct ForwardHookConfig {
+    /// upstream name_server configurations
+    pub name_servers: NameServerConfigGroup,
+    pub name_servers_index: HashMap<String, NameServerConfigGroup>,
+    pub acls: Vec<AclEntry>,
     /// Resolver options
     pub options: Option<ResolverOpts>,
 }

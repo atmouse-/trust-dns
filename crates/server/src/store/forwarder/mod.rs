@@ -13,4 +13,6 @@ mod authority;
 mod config;
 
 pub use self::authority::ForwardAuthority;
+pub use self::authority::ForwardHookAuthority;
 pub use self::config::ForwardConfig;
+pub use self::config::ForwardHookConfig;

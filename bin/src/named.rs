@@ -51,6 +51,8 @@ use trust_dns_server::server::ServerFuture;
 use trust_dns_server::store::file::{FileAuthority, FileConfig};
 #[cfg(feature = "resolver")]
 use trust_dns_server::store::forwarder::ForwardAuthority;
+#[cfg(feature = "resolver")]
+use trust_dns_server::store::forwarder::ForwardHookAuthority;
 #[cfg(feature = "sqlite")]
 use trust_dns_server::store::sqlite::{SqliteAuthority, SqliteConfig};
 use trust_dns_server::store::StoreConfig;
@@ -109,6 +111,17 @@ fn load_zone(
         #[cfg(feature = "resolver")]
         Some(StoreConfig::Forward(ref config)) => {
             let forwarder = ForwardAuthority::try_from_config(zone_name, zone_type, config);
+            let forwarder = runtime.block_on(forwarder)?;
+
+            Box::new(Arc::new(RwLock::new(forwarder)))
+        }
+        #[cfg(feature = "resolver")]
+        Some(StoreConfig::ForwardHook(ref config)) => {
+            let forwarder = ForwardHookAuthority::try_from_config(
+                zone_name,
+                zone_type,
+                config,
+            );
             let forwarder = runtime.block_on(forwarder)?;
 
             Box::new(Arc::new(RwLock::new(forwarder)))

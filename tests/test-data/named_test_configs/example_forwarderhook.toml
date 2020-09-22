@@ -1,0 +1,69 @@
+listen_addrs_ipv4 = ["127.0.0.5"]
+
+listen_port = 53
+# endpoint
+tls_cert = { path = "sec/example.cert.pem", endpoint_name = "ns.example.com", cert_type = "pem", private_key = "sec/example.key" }
+
+tls_listen_port = 853
+## Default zones, these should be present on all nameservers, except in rare
+##  configuration cases
+[[zones]]
+zone = "localhost"
+zone_type = "Master"
+file = "default/localhost.zone"
+
+[[zones]]
+zone = "0.0.127.in-addr.arpa"
+zone_type = "Master"
+file = "default/127.0.0.1.zone"
+
+[[zones]]
+zone = "0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa"
+zone_type = "Master"
+file = "default/ipv6_1.zone"
+
+[[zones]]
+zone = "255.in-addr.arpa"
+zone_type = "Master"
+file = "default/255.zone"
+
+[[zones]]
+zone = "0.in-addr.arpa"
+zone_type = "Master"
+file = "default/0.zone"
+
+[[zones]]
+## zone: this is the ORIGIN of the zone, aka the base name, '.' is implied on the end
+##  specifying something other than '.' here, will restrict this forwarder to only queries
+##  where the search name is a subzone of the name, e.g. if zone is "example.com.", then
+##  queries for "www.example.com" or "example.com" would be forwarded.
+zone = "."
+
+## zone_type: Master, Slave, Hint, Forward
+zone_type = "Forward"
+
+## remember the port, defaults: 53 for Udp & Tcp, 853 for Tls and 443 for Https.
+##   Tls and/or Https require features dns-over-tls and/or dns-over-https
+#stores = { type = "forward", name_servers = [{ socket_addr = "10.0.0.2:53", protocol = "Udp" },
+#                                             { socket_addr = "10.0.0.2:53", protocol = "Tcp" }] }
+
+stores = { type = "forwardhook", name_servers = [{ socket_addr = "10.0.0.2:53", protocol = "Udp" }, { socket_addr = "10.0.0.2:53", protocol = "Tcp" }], name_servers_index = { cnc = [{ socket_addr = "218.104.128.106:53", protocol = "Udp" }], ctc = [{ socket_addr = "218.85.152.99:53", protocol = "Udp" }] }, acls = [
+    { name = "00.net.", forward_to = "cnc" },
+    { name = "00042.com.", forward_to = "cnc" },
+    { name = "0005pz.com.", forward_to = "cnc" },
+    { name = "0006266.com.", forward_to = "cnc" },
+    { name = "0007.net.", forward_to = "cnc" },
+    { name = "000dn.com.", forward_to = "cnc" },
+    { name = "00137.net.", forward_to = "cnc" },
+    { name = "001bank.com.", forward_to = "cnc" },
+    { name = "001cndc.com.", forward_to = "cnc" },
+    { name = "zzyas.com.", forward_to = "ctc" },
+    { name = "zzyb.org.", forward_to = "ctc" },
+    { name = "zzyichen.net.", forward_to = "ctc" },
+    { name = "zzyjsmba.com.", forward_to = "ctc" },
+    { name = "zzyzan.com.", forward_to = "ctc" },
+    { name = "zzz4.com.", forward_to = "ctc" },
+    { name = "zzzyit.com.", forward_to = "ctc" },
+    { name = "zzzzhong.com.", forward_to = "ctc" },
+    { name = "zzzzmall.com.", forward_to = "ctc" },
+    ] }

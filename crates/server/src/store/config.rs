@@ -12,6 +12,8 @@ use serde::Deserialize;
 use crate::store::file::FileConfig;
 #[cfg(feature = "trust-dns-resolver")]
 use crate::store::forwarder::ForwardConfig;
+#[cfg(feature = "trust-dns-resolver")]
+use crate::store::forwarder::ForwardHookConfig;
 #[cfg(feature = "sqlite")]
 use crate::store::sqlite::SqliteConfig;
 
@@ -28,4 +30,7 @@ pub enum StoreConfig {
     /// Forwarder, aka Resolver
     #[cfg(feature = "trust-dns-resolver")]
     Forward(ForwardConfig),
+    /// Forwarder Hook
+    #[cfg(feature = "trust-dns-resolver")]
+    ForwardHook(ForwardHookConfig),
 }

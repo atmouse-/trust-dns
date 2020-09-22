@@ -374,6 +374,29 @@ impl fmt::Display for NameServerConfig {
     }
 }
 
+#[derive(Clone, Debug, Eq, PartialEq)]
+#[cfg_attr(feature = "serde-config", derive(Serialize, Deserialize))]
+pub struct NameServerHookConfig {
+    pub name_server_id: String,
+    /// The address which the DNS NameServer is registered at.
+    pub socket_addr: SocketAddr,
+    /// The protocol to use when communicating with the NameServer.
+    pub protocol: Protocol,
+    /// SPKI name, only relevant for TLS connections
+    pub tls_dns_name: Option<String>,
+    #[cfg(feature = "dns-over-rustls")]
+    #[cfg_attr(feature = "serde-config", serde(skip))]
+    /// optional configuration for the tls client
+    pub tls_config: Option<TlsClientConfig>,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+#[cfg_attr(feature = "serde-config", derive(Serialize, Deserialize))]
+pub struct AclEntry {
+    pub name: String,
+    pub forward_to: String,
+}
+
 /// A set of name_servers to associate with a [`ResolverConfig`].
 #[derive(Clone, Debug, Eq, PartialEq)]
 #[cfg_attr(
@@ -383,6 +406,25 @@ impl fmt::Display for NameServerConfig {
 pub struct NameServerConfigGroup(
     Vec<NameServerConfig>,
     #[cfg(feature = "dns-over-rustls")] Option<TlsClientConfig>,
+);
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+#[cfg_attr(
+    all(feature = "serde-config", not(feature = "dns-over-rustls")),
+    derive(Serialize, Deserialize)
+)]
+pub struct NameServerHookConfigGroup(
+    Vec<NameServerHookConfig>,
+    #[cfg(feature = "dns-over-rustls")] Option<TlsClientConfig>,
+);
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+#[cfg_attr(
+    all(feature = "serde-config", not(feature = "dns-over-rustls")),
+    derive(Serialize, Deserialize)
+)]
+pub struct NameServerHookAclGroup(
+    Vec<AclEntry>,
 );
 
 #[cfg(all(feature = "serde-config", feature = "dns-over-rustls"))]
