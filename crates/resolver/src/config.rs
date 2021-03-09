@@ -766,7 +766,7 @@ impl Default for ResolverOpts {
             attempts: 2,
             rotate: false,
             check_names: true,
-            edns0: false,
+            edns0: true,
             validate: false,
             ip_strategy: LookupIpStrategy::default(),
             cache_size: 32,
